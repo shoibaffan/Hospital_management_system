@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Physiotherapist } from "./PhysiotherapistManagement";
+import { useNotifications } from "@/contexts/NotificationContext";
 
 interface PhysiotherapistFormProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ interface PhysiotherapistFormProps {
 }
 
 export const PhysiotherapistForm = ({ isOpen, onClose, onSubmit, initialData, title }: PhysiotherapistFormProps) => {
+  const { addNotification } = useNotifications();
   const { register, handleSubmit, reset, formState: { errors } } = useForm<Omit<Physiotherapist, 'id'>>({
     defaultValues: initialData ? {
       name: initialData.name,
@@ -31,6 +33,17 @@ export const PhysiotherapistForm = ({ isOpen, onClose, onSubmit, initialData, ti
 
   const handleFormSubmit = (data: Omit<Physiotherapist, 'id'>) => {
     onSubmit(data);
+    
+    // Add notification for physiotherapist management
+    addNotification({
+      title: initialData ? "Physiotherapist Updated" : "New Physiotherapist Added",
+      message: initialData 
+        ? `${data.name}'s information has been updated`
+        : `${data.name} has been added as a new physiotherapist`,
+      type: "success",
+      section: "physiotherapists"
+    });
+    
     reset();
   };
 
@@ -74,8 +87,28 @@ export const PhysiotherapistForm = ({ isOpen, onClose, onSubmit, initialData, ti
             <Label htmlFor="contact">Contact Number</Label>
             <Input
               id="contact"
-              {...register("contact", { required: "Contact number is required" })}
-              placeholder="Enter contact number"
+              {...register("contact", { 
+                required: "Contact number is required",
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: "Contact number must contain only numbers"
+                },
+                minLength: {
+                  value: 10,
+                  message: "Contact number must be at least 10 digits"
+                },
+                maxLength: {
+                  value: 15,
+                  message: "Contact number cannot exceed 15 digits"
+                }
+              })}
+              placeholder="Enter contact number (numbers only)"
+              type="tel"
+              onInput={(e) => {
+                // Only allow numbers
+                const target = e.target as HTMLInputElement;
+                target.value = target.value.replace(/[^0-9]/g, '');
+              }}
             />
             {errors.contact && (
               <p className="text-sm text-destructive">{errors.contact.message}</p>

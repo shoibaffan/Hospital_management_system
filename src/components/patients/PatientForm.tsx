@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Patient } from "./PatientManagement";
+import { useNotifications } from "@/contexts/NotificationContext";
 
 interface PatientFormProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ interface PatientFormProps {
 }
 
 export const PatientForm = ({ isOpen, onClose, onSubmit, initialData, title }: PatientFormProps) => {
+  const { addNotification } = useNotifications();
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<Omit<Patient, 'id'>>({
     defaultValues: initialData ? {
       firstName: initialData.firstName,
@@ -36,6 +38,17 @@ export const PatientForm = ({ isOpen, onClose, onSubmit, initialData, title }: P
 
   const handleFormSubmit = (data: Omit<Patient, 'id'>) => {
     onSubmit(data);
+    
+    // Add notification for patient management
+    addNotification({
+      title: initialData ? "Patient Updated" : "New Patient Added",
+      message: initialData 
+        ? `${data.firstName} ${data.lastName}'s information has been updated`
+        : `${data.firstName} ${data.lastName} has been added as a new patient`,
+      type: "success",
+      section: "patients"
+    });
+    
     reset();
   };
 

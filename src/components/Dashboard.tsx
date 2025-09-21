@@ -86,10 +86,18 @@ const Dashboard = () => {
   };
 
   const handleBookAgain = (appointmentId: number, patientName: string) => {
+    // Updated function to handle "Book Again" functionality
     toast({
-      title: "Booking Request Submitted",
-      description: `New appointment request for ${patientName} has been submitted.`,
+      title: "Booking Request Initiated",
+      description: `Redirecting to book a new appointment for ${patientName}`,
     });
+    
+    // In a real implementation, you would:
+    // 1. Navigate to the appointment form with pre-filled data
+    // 2. Or open a booking modal with patient information
+    // 3. Update the appointment status in the backend
+    
+    console.log(`Book again clicked for appointment ${appointmentId}, patient: ${patientName}`);
   };
 
   return (

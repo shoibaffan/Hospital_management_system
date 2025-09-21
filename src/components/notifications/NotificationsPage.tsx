@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Bell, Clock, CheckCircle, XCircle, AlertCircle, ArrowLeft } from "lucide-react";
+import { useNotifications } from "@/contexts/NotificationContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,96 +9,8 @@ interface NotificationsPageProps {
   onBack: () => void;
 }
 
-interface Notification {
-  id: number;
-  title: string;
-  message: string;
-  time: string;
-  type: "info" | "success" | "warning" | "error";
-  read: boolean;
-  section: string;
-}
-
 const NotificationsPage = ({ onBack }: NotificationsPageProps) => {
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: 1,
-      title: "New Patient Registration",
-      message: "Sarah Johnson has registered as a new patient",
-      time: "2 mins ago",
-      type: "success",
-      read: false,
-      section: "patients"
-    },
-    {
-      id: 2,
-      title: "Appointment Scheduled",
-      message: "New appointment scheduled for tomorrow at 10:00 AM",
-      time: "15 mins ago",
-      type: "info",
-      read: false,
-      section: "appointments"
-    },
-    {
-      id: 3,
-      title: "Treatment Completed",
-      message: "Physical therapy session completed for Mike Davis",
-      time: "1 hour ago",
-      type: "success",
-      read: true,
-      section: "treatments"
-    },
-    {
-      id: 4,
-      title: "Staff Member Absent",
-      message: "Dr. Taylor will be on leave from tomorrow",
-      time: "2 hours ago",
-      type: "warning",
-      read: false,
-      section: "staff"
-    },
-    {
-      id: 5,
-      title: "Equipment Maintenance",
-      message: "Ultrasound equipment scheduled for maintenance",
-      time: "3 hours ago",
-      type: "warning",
-      read: true,
-      section: "treatments"
-    },
-    {
-      id: 6,
-      title: "Payment Received",
-      message: "Payment received from John Anderson",
-      time: "4 hours ago",
-      type: "success",
-      read: true,
-      section: "patients"
-    },
-    {
-      id: 7,
-      title: "Appointment Cancelled",
-      message: "Emma Wilson cancelled her appointment",
-      time: "5 hours ago",
-      type: "error",
-      read: true,
-      section: "appointments"
-    }
-  ]);
-
-  const markAsRead = (id: number) => {
-    setNotifications(prev =>
-      prev.map(notification =>
-        notification.id === id ? { ...notification, read: true } : notification
-      )
-    );
-  };
-
-  const markAllAsRead = () => {
-    setNotifications(prev =>
-      prev.map(notification => ({ ...notification, read: true }))
-    );
-  };
+  const { notifications, markAsRead, markAllAsRead, getUnreadCount } = useNotifications();
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -126,7 +38,7 @@ const NotificationsPage = ({ onBack }: NotificationsPageProps) => {
     }
   };
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = getUnreadCount();
 
   return (
     <div className="p-6 space-y-6">

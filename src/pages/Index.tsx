@@ -1,125 +1,95 @@
 import { useState } from "react";
-import { 
-  LayoutDashboard, 
-  Users, 
-  UserCheck, 
-  Calendar, 
-  Settings, 
-  Activity,
-  FileText,
-  ClipboardList,
-  Menu,
-  X
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
+import Sidebar from "@/components/Sidebar";
+import Header from "@/components/Header";
+import Dashboard from "@/components/Dashboard";
+import PatientManagement from "@/components/patients/PatientManagement";
+import PhysiotherapistManagement from "@/components/physiotherapists/PhysiotherapistManagement";
+import AppointmentManagement from "@/components/appointments/AppointmentManagement";
+import StaffManagement from "@/components/staff/StaffManagement";
+import TreatmentManagement from "@/components/treatments/TreatmentManagement";
+import NotificationsPage from "@/components/notifications/NotificationsPage";
+import ReportsContent from "@/components/reports/ReportsContent";
+import SettingsContent from "@/components/settings/SettingsContent";
 
-interface SidebarProps {
-  activeSection: string;
-  onSectionChange: (section: string) => void;
-}
+const Index = () => {
+  const navigate = useNavigate();
+  const [activeSection, setActiveSection] = useState("dashboard");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showNotifications, setShowNotifications] = useState(false);
 
-const Sidebar = ({ activeSection, onSectionChange }: SidebarProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const handleLogout = () => {
+    navigate("/login");
+  };
 
-  const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { id: "patients", label: "Patients", icon: Activity },
-    { id: "physiotherapists", label: "Physiotherapists", icon: UserCheck },
-    { id: "staff", label: "Staff", icon: Users },
-    { id: "appointments", label: "Appointments", icon: Calendar },
-    { id: "treatments", label: "Treatments", icon: ClipboardList },
-    { id: "reports", label: "Reports", icon: FileText },
-    { id: "settings", label: "Settings", icon: Settings },
-  ];
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    // Add search logic here based on active section
+  };
+
+  const handleViewAllNotifications = () => {
+    setShowNotifications(true);
+    setActiveSection("notifications");
+  };
+
+  const handleNavigateToSettings = () => {
+    setActiveSection("settings");
+    setShowNotifications(false);
+  };
+
+  const handleBackFromNotifications = () => {
+    setShowNotifications(false);
+    setActiveSection("dashboard");
+  };
+
+  const renderContent = () => {
+    if (showNotifications) {
+      return <NotificationsPage onBack={handleBackFromNotifications} />;
+    }
+
+    switch (activeSection) {
+      case "dashboard":
+        return <Dashboard />;
+      case "patients":
+        return <PatientManagement />;
+      case "physiotherapists":
+        return <PhysiotherapistManagement />;
+      case "staff":
+        return <StaffManagement />;
+      case "appointments":
+        return <AppointmentManagement />;
+      case "treatments":
+        return <TreatmentManagement />;
+      case "reports":
+        return <ReportsContent />;
+      case "settings":
+        return <SettingsContent />;
+      default:
+        return <Dashboard />;
+    }
+  };
 
   return (
-    <>
-      {/* Mobile Overlay */}
-      {!isCollapsed && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-black/50 z-40"
-          onClick={() => setIsCollapsed(true)}
-        />
-      )}
+    <div className="min-h-screen bg-background flex">
+      <Sidebar 
+        activeSection={activeSection} 
+        onSectionChange={setActiveSection} 
+      />
       
-      {/* Sidebar */}
-      <div className={cn(
-        "fixed lg:static inset-y-0 left-0 z-50 w-64 bg-card border-r border-border shadow-medium transition-transform duration-300 lg:translate-x-0",
-        isCollapsed ? "-translate-x-full" : "translate-x-0"
-      )}>
-        <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="p-6 border-b border-border">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
-                  <Activity className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold text-foreground">PhysioHMS</h2>
-                  <p className="text-xs text-muted-foreground">Hospital Management</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setIsCollapsed(true)}
-                className="lg:hidden p-1 rounded-md hover:bg-accent"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-2">
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeSection === item.id;
-              
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    onSectionChange(item.id);
-                    setIsCollapsed(true); // Close mobile menu
-                  }}
-                  className={cn(
-                    "w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105",
-                    isActive 
-                      ? "bg-primary text-primary-foreground shadow-soft" 
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent hover:shadow-medium"
-                  )}
-                >
-                  <Icon className="w-5 h-5 flex-shrink-0" />
-                  <span>{item.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Footer */}
-          <div className="p-4 border-t border-border">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                <UserCheck className="w-4 h-4 text-primary" />
-              </div>
-              <div className="flex-1">
-                <p className="text-sm font-medium text-foreground">Admin User</p>
-                <p className="text-xs text-muted-foreground">administrator</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="flex-1 lg:ml-0">
+        <Header 
+          activeSection={activeSection}
+          onLogout={handleLogout}
+          onSearch={handleSearch}
+          onViewAllNotifications={handleViewAllNotifications}
+          onNavigateToSettings={handleNavigateToSettings}
+        />
+        <main className="min-h-[calc(100vh-73px)]">
+          {renderContent()}
+        </main>
       </div>
-
-      {/* Mobile Menu Button */}
-      <button
-        onClick={() => setIsCollapsed(false)}
-        className="lg:hidden fixed top-4 left-4 z-30 p-2 bg-card border border-border rounded-lg shadow-soft"
-      >
-        <Menu className="w-5 h-5" />
-      </button>
-    </>
+    </div>
   );
 };
 
-export default Sidebar;
+export default Index;
