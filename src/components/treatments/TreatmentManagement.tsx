@@ -1,5 +1,7 @@
+// UPDATED IN: src/components/treatments/TreatmentManagement.tsx
+// Added 6 new therapies: Hydro, Exercise, Massage, Traction, Laser, and Shockwave therapy
 import { useState } from "react";
-import { Activity, Zap, Thermometer, Snowflake, Target, Waves, Calendar } from "lucide-react";
+import { Activity, Zap, Thermometer, Snowflake, Target, Waves, Calendar, Droplets, Dumbbell, Hand, Move, Zap as LaserIcon, Radio } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import manualTherapyImg from "@/assets/manual-therapy.jpg";
 import ultrasoundTherapyImg from "@/assets/ultrasound-therapy.jpg";
@@ -7,6 +9,13 @@ import heatTherapyImg from "@/assets/heat-therapy.jpg";
 import coldTherapyImg from "@/assets/cold-therapy.jpg";
 import dryNeedlingImg from "@/assets/dry-needling.jpg";
 import electrotherapyImg from "@/assets/electrotherapy.jpg";
+// Added new therapy images
+import hydroTherapyImg from "@/assets/hydro-therapy.jpg";
+import exerciseTherapyImg from "@/assets/exercise-therapy.jpg";
+import massageTherapyImg from "@/assets/massage-therapy.jpg";
+import tractionTherapyImg from "@/assets/traction-therapy.jpg";
+import laserTherapyImg from "@/assets/laser-therapy.jpg";
+import shockwaveTherapyImg from "@/assets/shockwave-therapy.jpg";
 
 interface Therapy {
   id: string;
@@ -86,6 +95,78 @@ const therapies: Therapy[] = [
     duration: "15-25 minutes",
     benefits: ["Pain management", "Muscle strengthening", "Nerve stimulation", "Healing acceleration"],
     category: "Electrotherapy"
+  },
+  // Added Hydro Therapy card
+  {
+    id: "hydro-therapy",
+    name: "Hydro Therapy",
+    icon: Droplets,
+    image: hydroTherapyImg,
+    shortDescription: "Water-based rehabilitation therapy",
+    detailedDescription: "Hydro therapy utilizes the properties of water to facilitate movement, strengthen muscles, and promote healing. The buoyancy and resistance of water provide a safe environment for rehabilitation exercises.",
+    duration: "30-45 minutes",
+    benefits: ["Low-impact exercise", "Muscle strengthening", "Joint mobility", "Pain relief"],
+    category: "Physical"
+  },
+  // Added Exercise Therapy card
+  {
+    id: "exercise-therapy",
+    name: "Exercise Therapy",
+    icon: Dumbbell,
+    image: exerciseTherapyImg,
+    shortDescription: "Targeted rehabilitation exercises",
+    detailedDescription: "Exercise therapy involves structured physical activities designed to restore function, improve strength, and enhance mobility. Customized exercise programs target specific conditions and recovery goals.",
+    duration: "45-60 minutes",
+    benefits: ["Strength building", "Functional improvement", "Mobility enhancement", "Endurance training"],
+    category: "Physical"
+  },
+  // Added Massage Therapy card
+  {
+    id: "massage-therapy",
+    name: "Massage Therapy",
+    icon: Hand,
+    image: massageTherapyImg,
+    shortDescription: "Therapeutic massage treatment",
+    detailedDescription: "Massage therapy involves hands-on manipulation of soft tissues to promote relaxation, reduce muscle tension, and improve circulation. Various techniques are used to address specific therapeutic needs.",
+    duration: "30-60 minutes",
+    benefits: ["Stress reduction", "Muscle relaxation", "Improved circulation", "Pain relief"],
+    category: "Manual"
+  },
+  // Added Traction Therapy card
+  {
+    id: "traction-therapy",
+    name: "Traction Therapy",
+    icon: Move,
+    image: tractionTherapyImg,
+    shortDescription: "Spinal decompression treatment",
+    detailedDescription: "Traction therapy applies gentle pulling forces to the spine or limbs to relieve pressure on compressed nerves and promote proper alignment. Used for various spinal conditions and joint problems.",
+    duration: "20-30 minutes",
+    benefits: ["Spinal decompression", "Nerve pressure relief", "Improved alignment", "Pain reduction"],
+    category: "Physical"
+  },
+  // Added Laser Therapy card
+  {
+    id: "laser-therapy",
+    name: "Laser Therapy",
+    icon: LaserIcon,
+    image: laserTherapyImg,
+    shortDescription: "Low-level laser treatment",
+    detailedDescription: "Laser therapy uses focused light energy to stimulate cellular healing and reduce inflammation. The non-invasive treatment promotes tissue repair and provides pain relief without heat or damage.",
+    duration: "10-20 minutes",
+    benefits: ["Tissue healing", "Inflammation reduction", "Pain relief", "Non-invasive treatment"],
+    category: "Electrotherapy"
+  },
+  // Added Shockwave Therapy card
+  {
+    id: "shockwave-therapy",
+    name: "Shockwave Therapy",
+    icon: Radio,
+    image: shockwaveTherapyImg,
+    shortDescription: "Acoustic wave treatment",
+    detailedDescription: "Shockwave therapy delivers high-energy acoustic waves to injured tissues to promote healing and reduce pain. Effective for chronic conditions and stubborn injuries that haven't responded to other treatments.",
+    duration: "15-20 minutes",
+    benefits: ["Chronic pain relief", "Tissue regeneration", "Improved blood flow", "Non-surgical treatment"],
+    category: "Electrotherapy"
   }
 ];
 
@@ -93,6 +174,7 @@ const TreatmentManagement = () => {
   const [flippedCard, setFlippedCard] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
+  // Updated categories to include new therapy types
   const categories = ["All", "Physical", "Electrotherapy", "Thermal", "Manual"];
 
   const filteredTherapies = selectedCategory === "All" 

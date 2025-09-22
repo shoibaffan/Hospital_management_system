@@ -1,3 +1,6 @@
+// UPDATED IN: src/components/reports/ReportsContent.tsx
+// Lightweight Reports Section - Simple and Clean Design
+// Maintains readability and clarity without heavy UI elements
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -39,13 +42,15 @@ const ReportsContent = () => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
+      {/* UPDATED IN: src/components/reports/ReportsContent.tsx */}
+      {/* Lightweight Header - Clean and Simple */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">Reports & Analytics</h1>
         <p className="text-muted-foreground">Comprehensive insights into your physiotherapy clinic's performance.</p>
       </div>
 
-      {/* Key Metrics */}
+      {/* UPDATED IN: src/components/reports/ReportsContent.tsx */}
+      {/* Lightweight Key Metrics - Simple Card Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card className="border border-border shadow-soft hover:shadow-medium transition-all duration-300">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
