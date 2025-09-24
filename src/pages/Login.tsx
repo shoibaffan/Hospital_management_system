@@ -35,7 +35,8 @@ const Login = () => {
           title: "Login successful",
           description: "Welcome to Physiotherapy Dashboard",
         });
-        navigate("/");
+        // Redirect to dashboard after successful login - Login.tsx
+        navigate("/dashboard");
       } else {
         throw new Error("Invalid credentials");
       }

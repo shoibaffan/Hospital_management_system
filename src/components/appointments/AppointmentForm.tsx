@@ -7,6 +7,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Appointment } from "./AppointmentManagement";
 
+// Available treatment/therapy options for appointment booking
+const treatmentOptions = [
+  "Hydro Therapy",
+  "Exercise Therapy", 
+  "Massage Therapy",
+  "Traction Therapy",
+  "Laser Therapy",
+  "Shockwave Therapy",
+  "Manual Therapy",
+  "Heat Therapy",
+  "Cold Therapy",
+  "Electrotherapy",
+  "Ultrasound Therapy",
+  "Dry Needling"
+];
+
 interface Physiotherapist {
   id: string;
   name: string;
@@ -41,6 +57,7 @@ const doctors = [
 ];
 
 export const AppointmentForm = ({ isOpen, onClose, onSubmit, physiotherapists = [] }: AppointmentFormProps) => {
+  // Updated form state to include treatmentName field - AppointmentForm.tsx
   const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<Omit<Appointment, 'id'>>({
     defaultValues: {
       patientName: "",
@@ -48,6 +65,7 @@ export const AppointmentForm = ({ isOpen, onClose, onSubmit, physiotherapists = 
       date: "",
       time: "",
       purpose: "",
+      treatmentName: "", // Added treatment/therapy selection field
       status: "pending",
       reason: ""
     }
@@ -170,12 +188,31 @@ export const AppointmentForm = ({ isOpen, onClose, onSubmit, physiotherapists = 
             {errors.doctorName && <p className="text-sm text-destructive">{errors.doctorName.message}</p>}
           </div>
 
+          {/* Added Treatment/Therapy Name selection field - AppointmentForm.tsx */}
           <div className="space-y-2">
-            <Label htmlFor="purpose">Purpose</Label>
+            <Label htmlFor="treatmentName">Treatment / Therapy Name</Label>
+            <Select onValueChange={(value) => setValue("treatmentName", value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select treatment/therapy" />
+              </SelectTrigger>
+              <SelectContent>
+                {treatmentOptions.map((treatment) => (
+                  <SelectItem key={treatment} value={treatment}>
+                    {treatment}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {errors.treatmentName && <p className="text-sm text-destructive">{errors.treatmentName.message}</p>}
+          </div>
+
+          {/* Updated Purpose field to be optional - AppointmentForm.tsx */}
+          <div className="space-y-2">
+            <Label htmlFor="purpose">Purpose <span className="text-muted-foreground text-sm">(Optional)</span></Label>
             <Textarea
               id="purpose"
-              {...register("purpose", { required: "Purpose is required" })}
-              placeholder="Enter the purpose of the appointment"
+              {...register("purpose")} // Removed required validation to make it optional
+              placeholder="Enter the purpose of the appointment (optional)"
               className="min-h-[80px]"
             />
             {errors.purpose && <p className="text-sm text-destructive">{errors.purpose.message}</p>}

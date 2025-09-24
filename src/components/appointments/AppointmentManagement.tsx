@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { AppointmentForm } from "./AppointmentForm";
 import { Physiotherapist } from "../physiotherapists/PhysiotherapistManagement";
 
+// Updated Appointment interface to include treatmentName field - AppointmentManagement.tsx
 export interface Appointment {
   id: string;
   patientName: string;
@@ -14,6 +15,7 @@ export interface Appointment {
   date: string;
   time: string;
   purpose: string;
+  treatmentName?: string; // Added optional treatment/therapy field
   status: "confirmed" | "pending" | "cancelled";
   reason?: string;
 }
